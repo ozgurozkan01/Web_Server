@@ -1,0 +1,3 @@
+C:/Users/ozgur/GitHub/Web_Server/cmake-build-debug/CMakeFiles/Web_Server.dir
+C:/Users/ozgur/GitHub/Web_Server/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/ozgur/GitHub/Web_Server/cmake-build-debug/CMakeFiles/rebuild_cache.dir
