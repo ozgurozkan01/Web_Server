@@ -155,14 +155,22 @@ void send_message(const SOCKET& socket, const std::string& file_path, const std:
             break;
         }
 
-        ssize_t bytes_sent = send(socket, buffer.data(), bytes_to_read, 0);
-        if (bytes_sent == SOCKET_ERROR)
+        size_t bytes_to_send = bytes_to_read;
+        const char* buffer_ptr = buffer.data();
+
+        while (bytes_to_send > 0)
         {
-            std::cerr << "Error sending file data: " << WSAGetLastError() << std::endl;
-            break;
+            ssize_t bytes_sent = send(socket, buffer_ptr, bytes_to_send, 0);
+            if (bytes_sent == SOCKET_ERROR)
+            {
+                std::cerr << "Error sending file data: " << WSAGetLastError() << std::endl;
+                return; // Terminate if sending fails
+            }
+            buffer_ptr += bytes_sent;
+            bytes_to_send -= bytes_sent;
         }
 
-        bytes_remaining -= bytes_sent;
+        bytes_remaining -= bytes_to_read;
     }
 
     file.close();
@@ -243,7 +251,7 @@ void get_data(const std::string& request_type, std::string client_message)
 
 std::string find_mime_type(const std::string& file_extension)
 {
-    for (int i = 0; i <= sizeof(mime_types); ++i)
+    for (int i = 0; i <= sizeof(mime_types) / sizeof(mime_types[0]); ++i)
     {
         if (allowed_file_extensions[i] == file_extension)
         {
